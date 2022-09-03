@@ -1,0 +1,100 @@
+<html>
+
+<head>
+    <title>Aplicativo de Colagem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <center>
+        <h1>App Colagem</h1>
+        <hr>
+        <h4 style="color: red;">Assim que o pop-up aparecer, clique em Permitir. Depois de ter falado um comando</h4>
+        <h3>Clique no botão, e diga: Selfie</h3>
+        <textarea class="form-control" id="textbox" readonly="true"></textarea>
+        <button class="btn btn-success" onclick="start()">Iniciar</button>
+        <hr>
+        <label>Sua webcam aqui:</label>
+        <div id="camera"></div>
+        <br>
+        <label>Suas Fotos:</label>
+        <div id="result">
+            
+        </div>
+    </center>
+    <script>
+    var webApi = window.webkitSpeechRecognition;
+var recAmerica = new webApi();
+
+function start(){
+    document.getElementById("textbox").innerHTML = " ";
+    recAmerica.start();
+}
+recAmerica.onresult = function(event){console.log(event);
+var Content = event.results[0][0].transcript;
+console.log(Content);
+document.getElementById("textbox").innerHTML = Content;
+
+if(Content == "Bone."){
+    console.log("Com Nutella fica melhor");
+    speak();
+}
+if(Content == "Mine."){
+    console.log("Com Nutella fica melhor");
+    speak1();
+}
+};
+function speak(){
+    speaking = window.speechSynthesis;
+    mainSpeaking = "Com Nutella Fica Melhor";
+    GM_Speaking = new SpeechSynthesisUtterance(mainSpeaking);
+    speaking.speak(GM_Speaking);
+    Webcam.attach( 'camera' );
+    setTimeout(function(){
+        takeSelfie();
+        save();
+    },10000);
+}
+function speak1(){
+    speaking = window.speechSynthesis;
+    mainSpeaking = "Craft!";
+    GM_Speaking = new SpeechSynthesisUtterance(mainSpeaking);
+    speaking.speak(GM_Speaking);
+    Webcam.attach( 'camera' );
+    setTimeout(function(){
+        takeSelfie();
+        save();
+    },10000);
+}
+camera = document.getElementById("camera");
+Webcam.set({
+    width: 320,
+    height: 240,
+    image_format: 'png',
+    png_quality: 90
+ });
+function takeSelfie(){
+    Webcam.snap(function(data_uri) {
+      document.getElementById("result").innerHTML = '<img id="selfieImage" src="'+data_uri+'"/>'; 
+    });
+}
+function save(){
+    link = document.getElementById("link");
+    image = document.getElementById("selfieImage").src;
+    link.href = image;
+    link.click();
+}
+ </script>
+</body>
+
+</html>
